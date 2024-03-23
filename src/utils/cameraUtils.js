@@ -1,9 +1,3 @@
-import { useRef, useState, useEffect } from "react";
-import { HandLandmarker, FilesetResolver, DrawingUtils, PoseLandmarker, DrawingOptions } from '@mediapipe/tasks-vision'
-import { Camera } from '@mediapipe/camera_utils'
-import styles from '@/styles/main.module.css'
-import * as tf from '@tensorflow/tfjs';
-
 export async function setupMediaStream(setMediaStream) {
     try {
         const ms = await navigator.mediaDevices.getUserMedia({
@@ -13,7 +7,7 @@ export async function setupMediaStream(setMediaStream) {
         setMediaStream(ms);
     } catch (e) {
         alert("Camera is disabled");
-        throw e;
+        // throw e;
     }
 }
 

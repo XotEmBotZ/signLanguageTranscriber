@@ -1,10 +1,4 @@
-import { useRef, useState, useEffect } from "react";
 import { HandLandmarker, FilesetResolver, DrawingUtils, PoseLandmarker, DrawingOptions } from '@mediapipe/tasks-vision'
-import { Camera } from '@mediapipe/camera_utils'
-import styles from '@/styles/main.module.css'
-import * as tf from '@tensorflow/tfjs';
-import { setupWebcamVideo } from '@/utils/cameraUtils'
-
 
 // dump data declarations
 let temp = []

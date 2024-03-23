@@ -33,7 +33,7 @@ const theme = createTheme({
 });
 
 export default function RootLayout({ children }) {
-  const [opened, { toggle, close }] = useDisclosure(false);
+  const [opened, { toggle, close }] = useDisclosure(true);
 
   return (
     <html lang="en">
