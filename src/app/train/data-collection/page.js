@@ -7,7 +7,7 @@ import { setupWebcamVideo } from '@/utils/cameraUtils'
 import { createLandmarker, processData } from '@/utils/mediapipeUtils'
 import styles from '@/styles/train.module.css'
 import { notifications } from '@mantine/notifications'
-import { TextInput, Group, Button, Autocomplete, Grid } from '@mantine/core';
+import { TextInput, Group, Button, Autocomplete, Grid,NativeSelect } from '@mantine/core';
 
 
 const TrainPage = () => {
@@ -16,7 +16,9 @@ const TrainPage = () => {
     const [detectStart, setDetectStart] = useState(false)
     const [results, setResults] = useState({})
     const [label, setLabel] = useState("")
-    // const [tempData, setTempData] = useState([])
+    const [videoInputLabel, setVideoInputLabel] = useState("")
+    const [videoInputLabelList, setVideoInputLabelList] = useState([])
+    const [inputDevice, setInputDevice] = useState([])
 
     //third party hooks
     // const matches = useMediaQuery('(min-width: 56.25em)');
@@ -24,6 +26,9 @@ const TrainPage = () => {
     // reference declarations
     const videoRef = useRef(null);
     const canvasRef = useRef(null)
+    const inputDeviceId = useRef(null)
+    const detectInterval = useRef(null)
+
     /**
      * @type {HandLandmarker}
      */
@@ -39,16 +44,48 @@ const TrainPage = () => {
     // medaipipe declarations
     const runningMode = "VIDEO";
 
-    var detectInterval
 
     useEffect(() => {
-        setupWebcamVideo(mediaStream, setMediaStream, videoRef);
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+            setInputDevice(devices)
+        })
         createLandmarker(runningMode).then(([handLandmarkerOpt, poseLandmarkerOpt]) => {
             handLandmarker.current = handLandmarkerOpt
             poseLandmarker.current = poseLandmarkerOpt
-            console.log(handLandmarker.current, poseLandmarker.current)
         });
-    }, [mediaStream]);
+    }, []);
+
+
+    useEffect(() => {
+        let videoDeviceListTemp = []
+        for (let value of inputDevice) {
+            if (value.label) {
+                videoDeviceListTemp.push(value.label)
+            }
+        }
+        console.log(videoDeviceListTemp[0])
+        setVideoInputLabelList(videoDeviceListTemp)
+        setVideoInputLabel(videoDeviceListTemp[0])
+    }, [inputDevice])
+
+    useEffect(() => {
+        if (inputDevice.length) {
+            inputDeviceId.current = inputDevice.filter((value, index) => value.label == videoInputLabel)[0].deviceId
+        }
+    }, [videoInputLabel])
+
+
+    const releaseCamera = () => {
+        if (videoRef.current) {
+            if (videoRef.current.srcObject) {
+                console.log("IN RELEASE CAMERA")
+                videoRef.current.srcObject.getTracks().forEach((track) => {
+                    track.stop();
+                });
+            }
+        }
+        setMediaStream(null)
+    }
 
     const detect = async () => {
         if (!handLandmarker.current) return
@@ -91,13 +128,11 @@ const TrainPage = () => {
 
     const startDetect = () => {
         const d = true
-        console.log("In START", d)
+        setupWebcamVideo(mediaStream, setMediaStream, videoRef, inputDeviceId.current).then(() => {
+            const int = setInterval(() => detect(), 100)
+            detectInterval.current = int
+        });
         setDetectStart(d)
-        const detectFunc = detect()
-        console.log(detectFunc, d)
-        const int = setInterval(detect, 100)
-        console.log(int)
-        detectInterval = int
     }
 
     const stopDetect = () => {
@@ -113,9 +148,9 @@ const TrainPage = () => {
 
         })
         setLabel("")
-        console.log(detectInterval)
-        clearInterval(detectInterval)
-        detectInterval = null
+        clearInterval(detectInterval.current)
+        detectInterval.current = null
+        releaseCamera()
     }
 
     const detectHandler = () => {
@@ -196,6 +231,11 @@ const TrainPage = () => {
             <Group justify="center" p={"md"}>
                 <Button onClick={clearMemoryData}>Clear Data (from Momory)</Button>
                 <Button onClick={clearDiskData}>Clear Data (from Disk)</Button>
+                <NativeSelect
+                    value={videoInputLabel}
+                    onChange={(event) => setVideoInputLabel(event.currentTarget.value)}
+                    data={videoInputLabelList}
+                />
             </Group>
             <Grid grow>
                 <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
