@@ -5,7 +5,7 @@ import styles from '@/styles/main.module.css'
 import * as tf from '@tensorflow/tfjs';
 import { setupWebcamVideo } from '@/utils/cameraUtils'
 import { createLandmarker, processData } from '@/utils/mediapipeUtils'
-import { Checkbox, Button, Group, AppShell } from '@mantine/core';
+import { Checkbox, Button, Group, AppShell, NativeSelect, Flex } from '@mantine/core';
 import { notifications } from "@mantine/notifications";
 
 
@@ -16,12 +16,16 @@ export default function Detector() {
   const [detectStart, setDetectStart] = useState(false)
   const [sentenceOpt, setSentenceOpt] = useState("Not initialized")
   const [useCustomModel, setUseCustomModel] = useState(false)
+  const [videoInputLabel, setVideoInputLabel] = useState("")
+  const [videoInputLabelList, setVideoInputLabelList] = useState([])
 
   // reference declarations
   const videoRef = useRef(null);
   const canvasRef = useRef(null)
   const prediction = useRef([])
   const sentence = useRef([])
+  const inputDevice = useRef([])
+  const inputDeviceId = useRef(null)
 
   //urls
   const modelUrl = 'localstorage://model'
@@ -105,7 +109,12 @@ export default function Detector() {
   }
 
   useEffect(() => {
-    setupWebcamVideo(mediaStream, setMediaStream, videoRef);
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+      inputDevice.current = devices
+    })
+  }, [])
+
+  useEffect(() => {
     createLandmarker(runningMode).then(([handLandmarkerOpt, poseLandmarkerOpt]) => {
       handLandmarker.current = handLandmarkerOpt
       poseLandmarker.current = poseLandmarkerOpt
@@ -167,18 +176,46 @@ export default function Detector() {
     }
   }, [useCustomModel])
 
+  useEffect(() => {
+    let videoDeviceListTemp = []
+    for (let value of inputDevice.current) {
+      if (value.label) {
+        videoDeviceListTemp.push(value.label)
+      }
+    }
+    setVideoInputLabelList(videoDeviceListTemp)
+    setVideoInputLabel(videoDeviceListTemp[0])
+  }, [inputDevice.current])
+
+  useEffect(() => {
+    if (inputDevice.current.length){
+      inputDeviceId.current = inputDevice.current.filter((value, index) => value.label == videoInputLabel)[0].deviceId
+    }
+  }, [videoInputLabel])
+
+  useEffect(() => {
+    
+  }, [detectStart])
+  
 
   const toggleDetect = () => {
     try {
       const d = !detectStart
       console.log(d)
       if (d) {
-        const int = setInterval(() => detect(), 100)
-        intervalId.current = int
-        console.log(int)
+        setupWebcamVideo(mediaStream, setMediaStream, videoRef, inputDeviceId.current).then(()=>{
+          const int = setInterval(() => detect(), 100)
+          intervalId.current = int
+          console.log(int)
+        });
       }
       if (!d) {
         clearInterval(intervalId.current)
+        videoRef.current.srcObject.getTracks().forEach((track) => {
+          track.stop();
+        });
+        videoRef.current.srcObject=null
+        setMediaStream(null)
       }
       setDetectStart(!detectStart)
     } catch (e) {
@@ -189,15 +226,22 @@ export default function Detector() {
     <>
       <AppShell.Navbar p="md">
         <h1>Configurations</h1>
-        <Group>
-          <Button variant="filled" onClick={toggleDetect}>{detectStart ? "Stop Detection" : "Start Detection"}</Button>
-          <Checkbox
-            defaultChecked
-            label="Use Custom Model"
-            onChange={(event) => setUseCustomModel(event.currentTarget.checked)}
-            checked={useCustomModel}
+        <Flex direction={'column'} gap={'sm'}>
+          <Group>
+            <Button variant="filled" onClick={toggleDetect}>{detectStart ? "Stop Detection" : "Start Detection"}</Button>
+            <Checkbox
+              defaultChecked
+              label="Use Custom Model"
+              onChange={(event) => setUseCustomModel(event.currentTarget.checked)}
+              checked={useCustomModel}
+            />
+          </Group>
+          <NativeSelect
+            value={videoInputLabel}
+            onChange={(event) => setVideoInputLabel(event.currentTarget.value)}
+            data={videoInputLabelList}
           />
-        </Group>
+        </Flex>
       </AppShell.Navbar >
       <h1>{sentenceOpt}</h1>
       <h1>{errorMsg}</h1>

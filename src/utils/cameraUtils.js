@@ -1,26 +1,25 @@
-export async function setupMediaStream(setMediaStream) {
+export async function setupMediaStream(setMediaStream,deviceId) {
+    
+}
+
+export async function setupWebcamVideo(mediaStream, setMediaStream,videoRef,deviceId) {
+    if (!deviceId){
+        throw "NO DEVICE"
+    }
     try {
         const ms = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "user" },
+            video: { deviceId: deviceId },
             audio: false
         });
         setMediaStream(ms);
-    } catch (e) {
-        alert("Camera is disabled");
-        // throw e;
-    }
-}
-
-export async function setupWebcamVideo(mediaStream, setMediaStream,videoRef) {
-    if (!mediaStream) {
-        await setupMediaStream(setMediaStream);
-    } else {
         const videoCurr = videoRef.current;
         if (!videoCurr) return;
         const video = videoCurr;
-        if (!video.srcObject) {
-            video.srcObject = mediaStream;
-        }
+        video.srcObject = ms;
+    } catch (e) {
+        alert("Camera is disabled");
     }
+    
+    
     console.log("Working here")
 }
