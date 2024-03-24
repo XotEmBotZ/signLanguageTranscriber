@@ -18,13 +18,13 @@ export default function Detector() {
   const [useCustomModel, setUseCustomModel] = useState(false)
   const [videoInputLabel, setVideoInputLabel] = useState("")
   const [videoInputLabelList, setVideoInputLabelList] = useState([])
+  const [inputDevice, setInputDevice] = useState([])
 
   // reference declarations
   const videoRef = useRef(null);
   const canvasRef = useRef(null)
   const prediction = useRef([])
   const sentence = useRef([])
-  const inputDevice = useRef([])
   const inputDeviceId = useRef(null)
 
   //urls
@@ -102,16 +102,18 @@ export default function Detector() {
       }
     } catch (e) {
       console.warn(e)
-      // console.warn(handLandmarkResult)
-      // console.warn(poseLandmarkResult)
       return
     }
   }
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then(devices => {
-      inputDevice.current = devices
+      setInputDevice(devices)
     })
+    return ()=>{
+      clearInterval(intervalId.current)
+      releaseCamera()
+    }
   }, [])
 
   useEffect(() => {
@@ -178,25 +180,21 @@ export default function Detector() {
 
   useEffect(() => {
     let videoDeviceListTemp = []
-    for (let value of inputDevice.current) {
+    for (let value of inputDevice) {
       if (value.label) {
         videoDeviceListTemp.push(value.label)
       }
     }
+    console.log(videoDeviceListTemp[0])
     setVideoInputLabelList(videoDeviceListTemp)
     setVideoInputLabel(videoDeviceListTemp[0])
-  }, [inputDevice.current])
+  }, [inputDevice])
 
   useEffect(() => {
-    if (inputDevice.current.length){
-      inputDeviceId.current = inputDevice.current.filter((value, index) => value.label == videoInputLabel)[0].deviceId
+    if (inputDevice.length){
+      inputDeviceId.current = inputDevice.filter((value, index) => value.label == videoInputLabel)[0].deviceId
     }
   }, [videoInputLabel])
-
-  useEffect(() => {
-    
-  }, [detectStart])
-  
 
   const toggleDetect = () => {
     try {
@@ -211,16 +209,24 @@ export default function Detector() {
       }
       if (!d) {
         clearInterval(intervalId.current)
-        videoRef.current.srcObject.getTracks().forEach((track) => {
-          track.stop();
-        });
-        videoRef.current.srcObject=null
-        setMediaStream(null)
+        releaseCamera()
       }
       setDetectStart(!detectStart)
     } catch (e) {
       console.warn(e)
     }
+  }
+
+  const releaseCamera=()=>{
+    if (videoRef.current){
+      if(videoRef.current.srcObject){
+        console.log("IN RELEASE CAMERA")
+        videoRef.current.srcObject.getTracks().forEach((track) => {
+          track.stop();
+        });
+      }
+    }
+    setMediaStream(null)
   }
   return (
     <>
