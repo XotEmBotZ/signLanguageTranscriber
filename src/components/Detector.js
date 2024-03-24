@@ -110,13 +110,6 @@ export default function Detector() {
     navigator.mediaDevices.enumerateDevices().then(devices => {
       setInputDevice(devices)
     })
-    return ()=>{
-      clearInterval(intervalId.current)
-      releaseCamera()
-    }
-  }, [])
-
-  useEffect(() => {
     createLandmarker(runningMode).then(([handLandmarkerOpt, poseLandmarkerOpt]) => {
       handLandmarker.current = handLandmarkerOpt
       poseLandmarker.current = poseLandmarkerOpt
@@ -137,8 +130,11 @@ export default function Detector() {
     } else {
       setErrorMsg("Model couldn't be loaded. Kindly refresh the page")
     }
-
-  }, [mediaStream]);
+    return ()=>{
+      clearInterval(intervalId.current)
+      releaseCamera()
+    }
+  }, [])
 
   useEffect(() => {
     console.log("In model change effect", useCustomModel)
