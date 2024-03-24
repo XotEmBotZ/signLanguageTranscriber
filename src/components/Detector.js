@@ -236,7 +236,6 @@ export default function Detector() {
           <Group>
             <Button variant="filled" onClick={toggleDetect}>{detectStart ? "Stop Detection" : "Start Detection"}</Button>
             <Checkbox
-              defaultChecked
               label="Use Custom Model"
               onChange={(event) => setUseCustomModel(event.currentTarget.checked)}
               checked={useCustomModel}
