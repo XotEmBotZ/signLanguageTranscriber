@@ -92,7 +92,7 @@ const Home = () => {
                 <Flex align={'flex-start'} justify={'center'} gap={'md'} wrap={'wrap'}>
                     <Flex direction={'column'}>
                         <Title order={2}>Check it out by yourself here:</Title>
-                        <Image radius={'md'} src={'qrcode.svg'} w={'min(20rem,100svw)'} />
+                        <Image radius={'md'} src={'media/qrcode.svg'} w={'min(20rem,100svw)'} />
                     </Flex>
                     <Flex direction={'column'}>
                         <Title order={2}>Use cases:</Title>
@@ -115,7 +115,7 @@ const Home = () => {
                     <Card shadow="sm" padding="lg" radius="md" withBorder w={'min-content'}>
                         <Card.Section p={'md'}>
                             <Image
-                                src="tensorflowLogo.svg"
+                                src="media/tensorflowLogo.svg"
                                 height={'auto'}
                                 alt="Norway"
                                 w={'16rem'}
@@ -132,7 +132,7 @@ const Home = () => {
                     <Card shadow="sm" padding="lg" radius="md" withBorder w={'min-content'}>
                         <Card.Section p={'md'}>
                             <Image
-                                src="tensorflowLogo.svg"
+                                src="media/tensorflowLogo.svg"
                                 height={'auto'}
                                 alt="Norway"
                                 w={'16rem'}
@@ -149,7 +149,7 @@ const Home = () => {
                     <Card shadow="sm" padding="lg" radius="md" withBorder w={'min-content'}>
                         <Card.Section p={'md'}>
                             <Image
-                                src="mediapipeLogo.svg"
+                                src="media/mediapipeLogo.svg"
                                 height={'auto'}
                                 alt="Norway"
                                 w={'16rem'}
@@ -166,7 +166,7 @@ const Home = () => {
                     <Card shadow="sm" padding="lg" radius="md" withBorder w={'min-content'}>
                         <Card.Section p={'md'}>
                             <Image
-                                src="htmlLogo.svg"
+                                src="media/htmlLogo.svg"
                                 height={'auto'}
                                 alt="Norway"
                                 w={'16rem'}
@@ -183,7 +183,7 @@ const Home = () => {
                     <Card shadow="sm" padding="lg" radius="md" withBorder w={'min-content'}>
                         <Card.Section p={'md'}>
                             <Image
-                                src="jsLogo.svg"
+                                src="media/jsLogo.svg"
                                 height={'auto'}
                                 alt="Norway"
                                 w={'16rem'}
@@ -200,7 +200,7 @@ const Home = () => {
                     <Card shadow="sm" padding="lg" radius="md" withBorder w={'min-content'}>
                         <Card.Section p={'md'}>
                             <Image
-                                src="cssLogo.svg"
+                                src="media/cssLogo.svg"
                                 height={'auto'}
                                 alt="Norway"
                                 w={'16rem'}
@@ -217,7 +217,7 @@ const Home = () => {
                     <Card shadow="sm" padding="lg" radius="md" withBorder w={'min-content'}>
                         <Card.Section p={'md'}>
                             <Image
-                                src="webglLogo.svg"
+                                src="media/webglLogo.svg"
                                 height={'auto'}
                                 alt="Norway"
                                 w={'16rem'}
@@ -234,7 +234,7 @@ const Home = () => {
                     <Card shadow="sm" padding="lg" radius="md" withBorder w={'min-content'}>
                         <Card.Section p={'md'}>
                             <Image
-                                src="gitLogo.svg"
+                                src="media/gitLogo.svg"
                                 height={'auto'}
                                 alt="Norway"
                                 w={'16rem'}
@@ -251,7 +251,7 @@ const Home = () => {
                     <Card shadow="sm" padding="lg" radius="md" withBorder w={'min-content'}>
                         <Card.Section p={'md'}>
                             <Image
-                                src="pythonLogo.svg"
+                                src="media/pythonLogo.svg"
                                 height={'auto'}
                                 alt="Norway"
                                 w={'16rem'}
@@ -268,7 +268,7 @@ const Home = () => {
                     <Card shadow="sm" padding="lg" radius="md" withBorder w={'min-content'}>
                         <Card.Section p={'md'}>
                             <Image
-                                src="nextjsLogo.svg"
+                                src="media/nextjsLogo.svg"
                                 height={'auto'}
                                 alt="Norway"
                                 w={'16rem'}
@@ -285,7 +285,7 @@ const Home = () => {
                     <Card shadow="sm" padding="lg" radius="md" withBorder w={'min-content'}>
                         <Card.Section p={'md'}>
                             <Image
-                                src="githubLogo.svg"
+                                src="media/githubLogo.svg"
                                 height={'auto'}
                                 alt="Norway"
                                 w={'16rem'}
