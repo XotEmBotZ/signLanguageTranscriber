@@ -1,0 +1,17 @@
+{
+    "name": "GestureCom",
+    "short_name": "GestureCom",
+    "icons": [
+        {
+            "src": "/media/next.svg",
+            "sizes": "192x192",
+            "type": "image/svg",
+            "purpose": "any maskable"
+        }
+    ],
+    "theme_color": "#FFFFFF",
+    "background_color": "#FFFFFF",
+    "start_url": "/",
+    "display": "standalone",
+    "orientation": "portrait"
+}

@@ -1,14 +1,50 @@
-'use client'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import NavBar from '@/components/NavBar'
-import Head from 'next/head'
-import { MantineProvider, createTheme, AppShell, Burger } from '@mantine/core';
-import { Notifications } from '@mantine/notifications'
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
-import { useDisclosure } from '@mantine/hooks';
-import { useEffect } from 'react'
+import { MantineProvider, createTheme } from '@mantine/core';
+import GlobalClientSideLayout from '@/components/globalClientsideLayout';
+
+const APP_NAME = "GestureCom";
+const APP_DEFAULT_TITLE = "GestureCom";
+const APP_TITLE_TEMPLATE = "%s";
+const APP_DESCRIPTION = "Helping communication";
+
+export const metadata = {
+  applicationName: APP_NAME,
+  title: {
+    default: APP_DEFAULT_TITLE,
+    template: APP_TITLE_TEMPLATE,
+  },
+  description: APP_DESCRIPTION,
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: APP_DEFAULT_TITLE,
+    // startUpImage: [],
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    siteName: APP_NAME,
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary",
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+  },
+};
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -33,7 +69,6 @@ const theme = createTheme({
 });
 
 export default function RootLayout({ children }) {
-  const [opened, { toggle, close }] = useDisclosure(true);
 
   return (
     <html lang="en">
@@ -42,26 +77,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className={inter.className}>
         <MantineProvider theme={theme}>
-          <AppShell
-            header={{ height: 65 }}
-            navbar={{
-              width: 300,
-              breakpoint: 'sm',
-              collapsed: { mobile: !opened, desktop: !opened },
-            }}
-            padding="md"
-          >
-            <AppShell.Header>
-              <NavBar opened={opened} toggle={toggle}></NavBar>
-            </AppShell.Header>
-            <AppShell.Navbar p="md">Navbar</AppShell.Navbar>
-            <AppShell.Main>
-              <main style={{ padding: '1rem var(--pagePadding)' }}>
-                {children}
-              </main>
-            </AppShell.Main>
-            <Notifications />
-          </AppShell>
+          <GlobalClientSideLayout>{children}</GlobalClientSideLayout>
         </MantineProvider>
       </body>
     </html>
