@@ -73,7 +73,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <title>GesutreCom</title>
+        <meta name="theme-color" content='#1995ef'/>
       </head>
       <body className={inter.className}>
         <MantineProvider theme={theme}>
