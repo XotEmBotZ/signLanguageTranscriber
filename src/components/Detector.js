@@ -106,48 +106,48 @@ export default function Detector() {
     }
   }
 
-  const setMediaDevices = (recursion = 0) => {
-    if (recursion > 5) {
-      notifications.show({
-        message: `Camera can't be moounted. Please allow camera or reload the page`,
-        withCloseButton: true,
-        title: "Please give permission ",
-        color: "red",
-      })
-      return 
-    }
-    try {
-      navigator.permissions.query({ name: 'camera' }).then(res => {
-        console.log(res.state)
-        if (res.state==='prompt') {
-          navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-            stream.getVideoTracks().forEach((track) => {
-              track.stop();
+    const setMediaDevices = (recursion = 0) => {
+      if (recursion > 5) {
+        notifications.show({
+          message: `Camera can't be moounted. Please allow camera or reload the page`,
+          withCloseButton: true,
+          title: "Please give permission ",
+          color: "red",
+        })
+        return 
+      }
+      try {
+        navigator.permissions.query({ name: 'camera' }).then(res => {
+          console.log(res.state)
+          if (res.state==='prompt') {
+            navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+              stream.getVideoTracks().forEach((track) => {
+                track.stop();
+              });
             });
-          });
-          setTimeout(() => setMediaDevices(recursion + 1), 1000)
-        }else if(res.state==='denied'){
-          notifications.show({
-            message: `Camera can't be moounted. Please allow camera or reload the page`,
-            withCloseButton: true,
-            title: "Please give permission",
-            color: "red",
-          })
-        } else {
-          navigator.mediaDevices.enumerateDevices().then(devices => {
-            setInputDevice(devices)
-          })
-        }
-      })
-    } catch (e) {
-      notifications.show({
-        message: `Camera can't be moounted. Please allow camera or reload the page`,
-        withCloseButton: true,
-        title: "Please give permission",
-        color: "red",
-      })
+            setTimeout(() => setMediaDevices(recursion + 1), 1000)
+          }else if(res.state==='denied'){
+            notifications.show({
+              message: `Camera can't be moounted. Please allow camera or reload the page`,
+              withCloseButton: true,
+              title: "Please give permission",
+              color: "red",
+            })
+          } else {
+            navigator.mediaDevices.enumerateDevices().then(devices => {
+              setInputDevice(devices)
+            })
+          }
+        })
+      } catch (e) {
+        notifications.show({
+          message: `Camera can't be moounted. Please allow camera or reload the page`,
+          withCloseButton: true,
+          title: "Please give permission",
+          color: "red",
+        })
+      }
     }
-  }
 
   useEffect(() => {
     setMediaDevices()

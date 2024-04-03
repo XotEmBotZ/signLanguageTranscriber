@@ -7,14 +7,14 @@ import { useDisclosure } from '@mantine/hooks';
 
 
 export default function GlobalClientSideLayout({children}) {
-    const [opened, { toggle, close }] = useDisclosure(true);
+    const [opened, { toggle, close }] = useDisclosure(false);
 
     return <AppShell
         header={{ height: 65 }}
         navbar={{
             width: 300,
             breakpoint: 'sm',
-            collapsed: { mobile: !opened, desktop: !opened },
+            collapsed: { mobile: !opened, desktop: opened },
         }}
         padding="md"
     >

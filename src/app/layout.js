@@ -52,16 +52,16 @@ const theme = createTheme({
   /** Put your mantine theme override here */
   colors: {
     primary: [
-      "#fff0e2",
-      "#ffdfcc",
-      "#ffbe9a",
-      "#ff9b63",
-      "#ff7d36",
-      "#ff6918",
-      "#ff5f06",
-      "#e44f00",
-      "#cb4400",
-      "#b23800"
+      "#e1f9ff",
+      "#ccedff",
+      "#9ad7ff",
+      "#64c1ff",
+      "#3baefe",
+      "#20a2fe",
+      "#099cff",
+      "#0088e4",
+      "#0078cd",
+      "#0069b6"
     ]
   },
   primaryColor: "primary",

@@ -15,7 +15,7 @@ const TrainPage = () => {
     const [mediaStream, setMediaStream] = useState(null);
     const [detectStart, setDetectStart] = useState(false)
     const [results, setResults] = useState({})
-    const [label, setLabel] = useState("")
+    const [label, setLabel] = useState("control")
     const [videoInputLabel, setVideoInputLabel] = useState("")
     const [videoInputLabelList, setVideoInputLabelList] = useState([])
     const [inputDevice, setInputDevice] = useState([])
@@ -45,10 +45,51 @@ const TrainPage = () => {
     const runningMode = "VIDEO";
 
 
+    const setMediaDevices = (recursion = 0) => {
+        if (recursion > 5) {
+            notifications.show({
+                message: `Camera can't be moounted. Please allow camera or reload the page`,
+                withCloseButton: true,
+                title: "Please give permission ",
+                color: "red",
+            })
+            return
+        }
+        try {
+            navigator.permissions.query({ name: 'camera' }).then(res => {
+                console.log(res.state)
+                if (res.state === 'prompt') {
+                    navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+                        stream.getVideoTracks().forEach((track) => {
+                            track.stop();
+                        });
+                    });
+                    setTimeout(() => setMediaDevices(recursion + 1), 1000)
+                } else if (res.state === 'denied') {
+                    notifications.show({
+                        message: `Camera can't be moounted. Please allow camera or reload the page`,
+                        withCloseButton: true,
+                        title: "Please give permission",
+                        color: "red",
+                    })
+                } else {
+                    navigator.mediaDevices.enumerateDevices().then(devices => {
+                        setInputDevice(devices)
+                    })
+                }
+            })
+        } catch (e) {
+            notifications.show({
+                message: `Camera can't be moounted. Please allow camera or reload the page`,
+                withCloseButton: true,
+                title: "Please give permission",
+                color: "red",
+            })
+        }
+    }
+
     useEffect(() => {
-        navigator.mediaDevices.enumerateDevices().then(devices => {
-            setInputDevice(devices)
-        })
+        setMediaDevices()
         createLandmarker(runningMode).then(([handLandmarkerOpt, poseLandmarkerOpt]) => {
             handLandmarker.current = handLandmarkerOpt
             poseLandmarker.current = poseLandmarkerOpt
@@ -59,7 +100,7 @@ const TrainPage = () => {
     useEffect(() => {
         let videoDeviceListTemp = []
         for (let value of inputDevice) {
-            if (value.label) {
+            if (value.label && value.kind === 'videoinput') {
                 videoDeviceListTemp.push(value.label)
             }
         }
