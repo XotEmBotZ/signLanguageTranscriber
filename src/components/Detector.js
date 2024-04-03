@@ -106,10 +106,51 @@ export default function Detector() {
     }
   }
 
+  const setMediaDevices = (recursion = 0) => {
+    if (recursion > 5) {
+      notifications.show({
+        message: `Camera can't be moounted. Please allow camera or reload the page`,
+        withCloseButton: true,
+        title: "Please give permission ",
+        color: "red",
+      })
+      return 
+    }
+    try {
+      navigator.permissions.query({ name: 'camera' }).then(res => {
+        console.log(res.state)
+        if (res.state==='prompt') {
+          navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+            stream.getVideoTracks().forEach((track) => {
+              track.stop();
+            });
+          });
+          setTimeout(() => setMediaDevices(recursion + 1), 1000)
+        }else if(res.state==='denied'){
+          notifications.show({
+            message: `Camera can't be moounted. Please allow camera or reload the page`,
+            withCloseButton: true,
+            title: "Please give permission",
+            color: "red",
+          })
+        } else {
+          navigator.mediaDevices.enumerateDevices().then(devices => {
+            setInputDevice(devices)
+          })
+        }
+      })
+    } catch (e) {
+      notifications.show({
+        message: `Camera can't be moounted. Please allow camera or reload the page`,
+        withCloseButton: true,
+        title: "Please give permission",
+        color: "red",
+      })
+    }
+  }
+
   useEffect(() => {
-    navigator.mediaDevices.enumerateDevices().then(devices => {
-      setInputDevice(devices)
-    })
+    setMediaDevices()
     createLandmarker(runningMode).then(([handLandmarkerOpt, poseLandmarkerOpt]) => {
       handLandmarker.current = handLandmarkerOpt
       poseLandmarker.current = poseLandmarkerOpt
@@ -130,7 +171,8 @@ export default function Detector() {
     } else {
       setErrorMsg("Model couldn't be loaded. Kindly refresh the page")
     }
-    return ()=>{
+
+    return () => {
       clearInterval(intervalId.current)
       releaseCamera()
     }
@@ -175,19 +217,21 @@ export default function Detector() {
   }, [useCustomModel])
 
   useEffect(() => {
+    console.log(inputDevice)
     let videoDeviceListTemp = []
     for (let value of inputDevice) {
-      if (value.label) {
+      if (value.label && value.kind === 'videoinput') {
         videoDeviceListTemp.push(value.label)
       }
     }
     console.log(videoDeviceListTemp[0])
     setVideoInputLabelList(videoDeviceListTemp)
     setVideoInputLabel(videoDeviceListTemp[0])
+    console.log(videoDeviceListTemp)
   }, [inputDevice])
 
   useEffect(() => {
-    if (inputDevice.length){
+    if (inputDevice.length) {
       inputDeviceId.current = inputDevice.filter((value, index) => value.label == videoInputLabel)[0].deviceId
     }
   }, [videoInputLabel])
@@ -197,7 +241,7 @@ export default function Detector() {
       const d = !detectStart
       console.log(d)
       if (d) {
-        setupWebcamVideo(mediaStream, setMediaStream, videoRef, inputDeviceId.current).then(()=>{
+        setupWebcamVideo(mediaStream, setMediaStream, videoRef, inputDeviceId.current).then(() => {
           const int = setInterval(() => detect(), 100)
           intervalId.current = int
           console.log(int)
@@ -213,9 +257,9 @@ export default function Detector() {
     }
   }
 
-  const releaseCamera=()=>{
-    if (videoRef.current){
-      if(videoRef.current.srcObject){
+  const releaseCamera = () => {
+    if (videoRef.current) {
+      if (videoRef.current.srcObject) {
         console.log("IN RELEASE CAMERA")
         videoRef.current.srcObject.getTracks().forEach((track) => {
           track.stop();
@@ -237,6 +281,7 @@ export default function Detector() {
               checked={useCustomModel}
             />
           </Group>
+          <Button variant="filled" onClick={setMediaDevices}>Recheck Media Devices</Button>
           <NativeSelect
             value={videoInputLabel}
             onChange={(event) => setVideoInputLabel(event.currentTarget.value)}

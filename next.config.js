@@ -1,4 +1,4 @@
-const basePath = process.env.NODE_ENV === 'production' ? '/singLanguageTranscriber' : '';
+const basePath = ''
 
 const withPWA = require("@ducanh2912/next-pwa").default({
     dest: "public",
@@ -7,7 +7,6 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'export',
     basePath: `${basePath}`,
     env: {
         basePath

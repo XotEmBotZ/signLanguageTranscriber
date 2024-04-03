@@ -16,6 +16,7 @@
     "@mediapipe/camera_utils": "^0.3.1675466862",
     "@mediapipe/tasks-vision": "^0.10.8",
     "@tensorflow/tfjs": "^4.14.0",
+    "firebase": "^10.10.0",
     "next": "14.0.3",
     "react": "^18",
     "react-dom": "^18"
