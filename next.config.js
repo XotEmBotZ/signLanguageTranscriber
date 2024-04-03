@@ -1,5 +1,10 @@
 const basePath = process.env.NODE_ENV === 'production' ? '/singLanguageTranscriber' : '';
 
+const withPWA = require("@ducanh2912/next-pwa").default({
+    dest: "public",
+    cacheStartUrl:true,
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     output: 'export',
@@ -13,4 +18,4 @@ const nextConfig = {
     // },
 }
 
-module.exports = nextConfig
+module.exports = withPWA(nextConfig)
