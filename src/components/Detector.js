@@ -95,10 +95,8 @@ export default function Detector() {
         if (new Set(prediction.current).size == 1 && sentence.current[sentence.current.length - 1] != prediction.current[0] && prediction.current[0] != "control") {
           // console.clear()
           sentence.current.push(prediction.current[0])
-          console.log(prediction.current[0], sentence.current)
           setSentenceOpt(sentence.current.join(" "))
         }
-        // console.log(prediction.current)
       }
     } catch (e) {
       console.warn(e)
@@ -106,48 +104,47 @@ export default function Detector() {
     }
   }
 
-    const setMediaDevices = (recursion = 0) => {
-      if (recursion > 5) {
-        notifications.show({
-          message: `Camera can't be moounted. Please allow camera or reload the page`,
-          withCloseButton: true,
-          title: "Please give permission ",
-          color: "red",
+
+  const setMediaDevices = () => {
+    try {
+      // navigator.permissions.query({ name: 'camera' }).then(res => {
+      //     if (res.state === 'prompt') {
+      //         navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+      //             stream.getVideoTracks().forEach((track) => {
+      //                 track.stop();
+      //             });
+      //         });
+      //         setTimeout(() => setMediaDevices(recursion + 1), 1000)
+      //     } else if (res.state === 'denied') {
+      //         notifications.show({
+      //             message: `Camera can't be moounted. Please allow camera or reload the page`,
+      //             withCloseButton: true,
+      //             title: "Please give permission",
+      //             color: "red",
+      //         })
+      //     } else {
+      //         navigator.mediaDevices.enumerateDevices().then(devices => {
+      //             setInputDevice(devices)
+      //         })
+      //     }
+      // })
+      navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+        stream.getVideoTracks().forEach((track) => {
+          track.stop();
+        });
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+          setInputDevice(devices)
         })
-        return 
-      }
-      try {
-        navigator.permissions.query({ name: 'camera' }).then(res => {
-          console.log(res.state)
-          if (res.state==='prompt') {
-            navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-              stream.getVideoTracks().forEach((track) => {
-                track.stop();
-              });
-            });
-            setTimeout(() => setMediaDevices(recursion + 1), 1000)
-          }else if(res.state==='denied'){
-            notifications.show({
-              message: `Camera can't be moounted. Please allow camera or reload the page`,
-              withCloseButton: true,
-              title: "Please give permission",
-              color: "red",
-            })
-          } else {
-            navigator.mediaDevices.enumerateDevices().then(devices => {
-              setInputDevice(devices)
-            })
-          }
-        })
-      } catch (e) {
-        notifications.show({
-          message: `Camera can't be moounted. Please allow camera or reload the page`,
-          withCloseButton: true,
-          title: "Please give permission",
-          color: "red",
-        })
-      }
+      });
+    } catch (e) {
+      notifications.show({
+        message: `Camera can't be moounted. Please allow camera or reload the page`,
+        withCloseButton: true,
+        title: "Please give permission",
+        color: "red",
+      })
     }
+  }
 
   useEffect(() => {
     setMediaDevices()
@@ -156,16 +153,13 @@ export default function Detector() {
       poseLandmarker.current = poseLandmarkerOpt
     });
     if (localStorage.getItem("customLabel")) {
-      console.log("Start loading custom model")
       tf.loadLayersModel("localstorage://customModel").then(modelOpt => {
-        console.log("Custom model loaded")
         model.current = modelOpt
         lables.current = JSON.parse(localStorage.getItem("customLabel"))
         setUseCustomModel(true)
       })
     } else if (localStorage.getItem("tensorflowjs_models/model/info")) {
       tf.loadGraphModel(modelUrl).then(modelOpt => {
-        console.log('default model loaded')
         model.current = modelOpt
       });
     } else {
@@ -179,10 +173,8 @@ export default function Detector() {
   }, [])
 
   useEffect(() => {
-    console.log("In model change effect", useCustomModel)
     if (useCustomModel) {
       tf.loadLayersModel("localstorage://customModel").then(modelOpt => {
-        console.log("Custom model loaded")
         model.current = modelOpt
         lables.current = JSON.parse(localStorage.getItem("customLabel"))
         setUseCustomModel(true)
@@ -203,7 +195,6 @@ export default function Detector() {
       })
     } else {
       tf.loadGraphModel(modelUrl).then(modelOpt => {
-        console.log('default model loaded')
         model.current = modelOpt
       });
       lables.current = defaultLables
@@ -217,17 +208,14 @@ export default function Detector() {
   }, [useCustomModel])
 
   useEffect(() => {
-    console.log(inputDevice)
     let videoDeviceListTemp = []
     for (let value of inputDevice) {
       if (value.label && value.kind === 'videoinput') {
         videoDeviceListTemp.push(value.label)
       }
     }
-    console.log(videoDeviceListTemp[0])
     setVideoInputLabelList(videoDeviceListTemp)
     setVideoInputLabel(videoDeviceListTemp[0])
-    console.log(videoDeviceListTemp)
   }, [inputDevice])
 
   useEffect(() => {
@@ -239,12 +227,10 @@ export default function Detector() {
   const toggleDetect = () => {
     try {
       const d = !detectStart
-      console.log(d)
       if (d) {
         setupWebcamVideo(mediaStream, setMediaStream, videoRef, inputDeviceId.current).then(() => {
           const int = setInterval(() => detect(), 100)
           intervalId.current = int
-          console.log(int)
         });
       }
       if (!d) {
@@ -260,7 +246,6 @@ export default function Detector() {
   const releaseCamera = () => {
     if (videoRef.current) {
       if (videoRef.current.srcObject) {
-        console.log("IN RELEASE CAMERA")
         videoRef.current.srcObject.getTracks().forEach((track) => {
           track.stop();
         });

@@ -19,7 +19,5 @@ export async function setupWebcamVideo(mediaStream, setMediaStream,videoRef,devi
     } catch (e) {
         alert("Camera is disabled");
     }
-    
-    
-    console.log("Working here")
+
 }

@@ -7,7 +7,7 @@ import { setupWebcamVideo } from '@/utils/cameraUtils'
 import { createLandmarker, processData } from '@/utils/mediapipeUtils'
 import styles from '@/styles/train.module.css'
 import { notifications } from '@mantine/notifications'
-import { TextInput, Group, Button, Autocomplete, Grid,NativeSelect } from '@mantine/core';
+import { TextInput, Group, Button, Autocomplete, Grid, NativeSelect } from '@mantine/core';
 
 
 const TrainPage = () => {
@@ -45,39 +45,37 @@ const TrainPage = () => {
     const runningMode = "VIDEO";
 
 
-    const setMediaDevices = (recursion = 0) => {
-        if (recursion > 5) {
-            notifications.show({
-                message: `Camera can't be moounted. Please allow camera or reload the page`,
-                withCloseButton: true,
-                title: "Please give permission ",
-                color: "red",
-            })
-            return
-        }
+    const setMediaDevices = () => {
         try {
-            navigator.permissions.query({ name: 'camera' }).then(res => {
-                console.log(res.state)
-                if (res.state === 'prompt') {
-                    navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-                        stream.getVideoTracks().forEach((track) => {
-                            track.stop();
-                        });
-                    });
-                    setTimeout(() => setMediaDevices(recursion + 1), 1000)
-                } else if (res.state === 'denied') {
-                    notifications.show({
-                        message: `Camera can't be moounted. Please allow camera or reload the page`,
-                        withCloseButton: true,
-                        title: "Please give permission",
-                        color: "red",
-                    })
-                } else {
-                    navigator.mediaDevices.enumerateDevices().then(devices => {
-                        setInputDevice(devices)
-                    })
-                }
-            })
+            // navigator.permissions.query({ name: 'camera' }).then(res => {
+            //     if (res.state === 'prompt') {
+            //         navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+            //             stream.getVideoTracks().forEach((track) => {
+            //                 track.stop();
+            //             });
+            //         });
+            //         setTimeout(() => setMediaDevices(recursion + 1), 1000)
+            //     } else if (res.state === 'denied') {
+            //         notifications.show({
+            //             message: `Camera can't be moounted. Please allow camera or reload the page`,
+            //             withCloseButton: true,
+            //             title: "Please give permission",
+            //             color: "red",
+            //         })
+            //     } else {
+            //         navigator.mediaDevices.enumerateDevices().then(devices => {
+            //             setInputDevice(devices)
+            //         })
+            //     }
+            // })
+            navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+                stream.getVideoTracks().forEach((track) => {
+                    track.stop();
+                });
+                navigator.mediaDevices.enumerateDevices().then(devices => {
+                    setInputDevice(devices)
+                })
+            });
         } catch (e) {
             notifications.show({
                 message: `Camera can't be moounted. Please allow camera or reload the page`,
@@ -104,7 +102,6 @@ const TrainPage = () => {
                 videoDeviceListTemp.push(value.label)
             }
         }
-        console.log(videoDeviceListTemp[0])
         setVideoInputLabelList(videoDeviceListTemp)
         setVideoInputLabel(videoDeviceListTemp[0])
     }, [inputDevice])
@@ -119,7 +116,6 @@ const TrainPage = () => {
     const releaseCamera = () => {
         if (videoRef.current) {
             if (videoRef.current.srcObject) {
-                console.log("IN RELEASE CAMERA")
                 videoRef.current.srcObject.getTracks().forEach((track) => {
                     track.stop();
                 });
@@ -132,7 +128,6 @@ const TrainPage = () => {
         if (!handLandmarker.current) return
         if (!poseLandmarker.current) return
         try {
-            console.log("In detect")
 
             const canvasContext = canvasRef.current.getContext('2d')
             canvasContext.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
@@ -157,7 +152,6 @@ const TrainPage = () => {
                     console.warn("ERROR in length")
                     return
                 }
-                console.log(results, label, finalData.length)
                 results[label].push(finalData)
                 setResults(results)
             }
@@ -177,9 +171,7 @@ const TrainPage = () => {
     }
 
     const stopDetect = () => {
-        console.log(results)
         const d = false
-        console.log("In STOP detect", d)
         setDetectStart(d)
         notifications.show({
             message: `Data regarding ${label} is captured`,
@@ -208,18 +200,15 @@ const TrainPage = () => {
         if (!results[label]) {
             results[label] = []
         }
-        console.log(results)
         startDetect()
         setTimeout(stopDetect, 10 * 1000);
     }
 
     const showResults = () => {
-        console.log(results,)
     }
 
     const saveData = () => {
         localStorage.setItem('trainData', JSON.stringify(results))
-        console.log("SAVED")
         notifications.show({
             message: "Your data is saved",
             withCloseButton: true,

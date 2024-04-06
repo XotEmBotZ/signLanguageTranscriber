@@ -46,8 +46,6 @@ const ModelTrain = () => {
         })
         prepairedDataX.current = tf.tensor2d(tempDataX)
         prepairedDataY.current = tf.tensor2d(tempDataY)
-        console.log(prepairedDataX.current.shape)
-        console.log(prepairedDataY.current.shape)
     }
 
     useEffect(() => {
@@ -68,7 +66,6 @@ const ModelTrain = () => {
             setDataComplaint(true)
             inputShape.current = trainDataObj.current[Object.keys(trainDataObj.current)[0]][0].length
         }
-        // console.log(trainDataObj.current[Object.keys(trainDataObj.current)[0]][0].length)
     }, [])
 
     const trainCallback = (epochs, logs) => {
@@ -89,8 +86,6 @@ const ModelTrain = () => {
     }
     const trainData = async () => {
         prepData()
-        console.log(prepairedDataX.current.bufferSync())
-        console.log(prepairedDataY.current.bufferSync())
         model.current = new tf.Sequential()
         model.current.add(tf.layers.dense({ units: 256, activation: 'relu', inputShape: inputShape.current }))
         model.current.add(tf.layers.dense({ units: 128, activation: "relu" }))
@@ -99,7 +94,6 @@ const ModelTrain = () => {
         model.current.add(tf.layers.dense({ units: Object.keys(trainDataObj.current).length, activation: "softmax" }))
         model.current.compile({ optimizer: 'adam', loss: 'categoricalCrossentropy', metrics: ['categoricalAccuracy'] })
         model.current.summary()
-        console.log(model.current.fit(prepairedDataX.current, prepairedDataY.current, { epochs: 200, verbose: 2, callbacks: { onEpochEnd: trainCallback, onTrainEnd: saveModel } }))
 
     }
     return (<>

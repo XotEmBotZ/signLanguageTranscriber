@@ -13,7 +13,6 @@ const Detect = () => {
         if (localStorage.getItem('model') === null) {
             tf.loadGraphModel(modelUrl).then(modelOpt => {
                 modelOpt.save('localstorage://model')
-                console.log('Model saved to localstorage')
             });
         }
     }, [])
