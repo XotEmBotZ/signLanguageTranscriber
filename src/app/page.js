@@ -92,7 +92,7 @@ const Home = () => {
                 <Flex align={'flex-start'} justify={'center'} gap={'md'} wrap={'wrap'}>
                     <Flex direction={'column'}>
                         <Title order={2}>Check it out by yourself here:</Title>
-                        <Image radius={'md'} src={'media/qrcode.svg'} w={'min(20rem,100svw)'} />
+                        <Image radius={'md'} src={'media/qr.png'} w={'min(20rem,100svw)'} />
                     </Flex>
                     <Flex direction={'column'}>
                         <Title order={2}>Use cases:</Title>
@@ -296,7 +296,7 @@ const Home = () => {
                             <Badge color="pink">Version Control|Publishing</Badge>
                         </Group>
                         <Text size="sm" c="dimmed">
-                            Github is used as remote code storace and as a hosting platform
+                            Github is used as remote code storace
                         </Text>
                     </Card>
                 </Flex>
@@ -316,8 +316,6 @@ const Home = () => {
                 </Flex>
                 <Title order={2}>Future Plans:</Title>
                 <List>
-                    <List.Item>Make the whole site totaily offline to facilitate the use in the absence of internet</List.Item>
-                    <List.Item>Convert the site to PWA for getter accessiblity</List.Item>
                     <List.Item>Add notification support to send notification upon recognising a particular sign</List.Item>
                     <List.Item>Expand the default model to recognise more general symbols</List.Item>
                 </List>

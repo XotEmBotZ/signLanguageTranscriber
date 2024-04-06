@@ -245,7 +245,7 @@ const TrainPage = () => {
             <h1 onClick={showResults} className={styles.title}>Collect data to train your model</h1>
             <p>Train your own model to recognise your personalized signs. Training your own model will also result in better recognition of your body style.</p>
             <p>NOTE: - You must record &lsquo; control&rsquo; sign to make the model work.&lsquo;control&rsquo; sign is just standing still or not showing any sign.</p>
-            <p>After clicking on start capturing, it will stop after 10seconds. If you want to capture more data, click the button again with the same label name.</p>
+            <p>After clicking on start capturing, it will stop after 15seconds. If you want to capture more data, click the button again with the same label name.</p>
             <p>You need to save the data before proceeding to model train page</p>
             <Group justify="space-around" p={"md"}>
                 <Autocomplete
