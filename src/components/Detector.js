@@ -99,6 +99,7 @@ export default function Detector() {
         }
       }
     } catch (e) {
+
       console.warn(e)
       return
     }
@@ -107,27 +108,6 @@ export default function Detector() {
 
   const setMediaDevices = () => {
     try {
-      // navigator.permissions.query({ name: 'camera' }).then(res => {
-      //     if (res.state === 'prompt') {
-      //         navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-      //             stream.getVideoTracks().forEach((track) => {
-      //                 track.stop();
-      //             });
-      //         });
-      //         setTimeout(() => setMediaDevices(recursion + 1), 1000)
-      //     } else if (res.state === 'denied') {
-      //         notifications.show({
-      //             message: `Camera can't be moounted. Please allow camera or reload the page`,
-      //             withCloseButton: true,
-      //             title: "Please give permission",
-      //             color: "red",
-      //         })
-      //     } else {
-      //         navigator.mediaDevices.enumerateDevices().then(devices => {
-      //             setInputDevice(devices)
-      //         })
-      //     }
-      // })
       navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
         stream.getVideoTracks().forEach((track) => {
           track.stop();
@@ -228,10 +208,7 @@ export default function Detector() {
     try {
       const d = !detectStart
       if (d) {
-        setupWebcamVideo(mediaStream, setMediaStream, videoRef, inputDeviceId.current).then(() => {
-          const int = setInterval(() => detect(), 100)
-          intervalId.current = int
-        });
+        setupWebcamVideo(mediaStream, setMediaStream, videoRef, inputDeviceId.current)
       }
       if (!d) {
         clearInterval(intervalId.current)
@@ -252,6 +229,11 @@ export default function Detector() {
       }
     }
     setMediaStream(null)
+  }
+  
+  const startInterval = () => {
+    const int = setInterval(detect, 100)
+    intervalId.current = int
   }
   return (
     <>
@@ -277,7 +259,7 @@ export default function Detector() {
       <h1>{sentenceOpt}</h1>
       <h1>{errorMsg}</h1>
       <div className={styles.videoPlayer}>
-        <video className="h-full w-full mx-auto" ref={videoRef} autoPlay muted />
+        <video className="h-full w-full mx-auto" ref={videoRef} autoPlay muted onLoadedData={startInterval} />
         <canvas ref={canvasRef}></canvas>
       </div>
     </>

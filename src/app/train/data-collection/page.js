@@ -163,10 +163,7 @@ const TrainPage = () => {
 
     const startDetect = () => {
         const d = true
-        setupWebcamVideo(mediaStream, setMediaStream, videoRef, inputDeviceId.current).then(() => {
-            const int = setInterval(() => detect(), 100)
-            detectInterval.current = int
-        });
+        setupWebcamVideo(mediaStream, setMediaStream, videoRef, inputDeviceId.current)
         setDetectStart(d)
     }
 
@@ -240,6 +237,12 @@ const TrainPage = () => {
 
         })
     }
+
+
+    const startInterval = () => {
+        const int = setInterval(() => detect(), 100)
+        detectInterval.current = int
+    }
     return (
         <>
             <h1 onClick={showResults} className={styles.title}>Collect data to train your model</h1>
@@ -270,7 +273,7 @@ const TrainPage = () => {
             <Grid grow>
                 <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
                     <div className={videoStyles.videoPlayer}>
-                        <video className="h-full w-full mx-auto" ref={videoRef} autoPlay muted />
+                        <video className="h-full w-full mx-auto" ref={videoRef} autoPlay muted onLoadedData={startInterval} />
                         <canvas ref={canvasRef}></canvas>
                     </div>
                 </Grid.Col>

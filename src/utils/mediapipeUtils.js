@@ -1,4 +1,5 @@
 import { HandLandmarker, FilesetResolver, DrawingUtils, PoseLandmarker, DrawingOptions } from '@mediapipe/tasks-vision'
+import { notifications } from "@mantine/notifications";
 
 // dump data declarations
 let temp = []
@@ -18,6 +19,7 @@ const dumpHandLandmark = temp
 
 
 export const createLandmarker = async (runningMode) => {
+    console.log("Started")
     const vision = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
     );
@@ -46,7 +48,12 @@ export const createLandmarker = async (runningMode) => {
         numPoses: 1,
     })
     let poseLandmarker = pm
-
+    notifications.show({
+        message: `All task loaded`,
+        withCloseButton: true,
+        title: "Task loaded",
+        color: "green",
+    })
     return [handLandmarker, poseLandmarker]
 };
 
