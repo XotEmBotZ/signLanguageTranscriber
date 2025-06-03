@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Unmaintained since Apr 7, 2024
 
-## Getting Started
+# GestureCom: Bridging the Communication Gap
 
-First, run the development server:
+## Explore your world of sign with us!
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+GestureCom is a privacy-first, offline-capable sign language transcriber. It comes with a pre-built model to get started and also offers the user the ability to train their own custom models. All data is processed on the device and never leaves the device.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Enjoy a privacy-focused, partially offline experience by checking out the following features:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+1.  **Start detecting sign language:** Use our pre-trained model or try your custom model.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+2.  **Start training your custom model:** Collect and train your own custom model.
 
-## Learn More
+## How to Run (with Docker Compose)
 
-To learn more about Next.js, take a look at the following resources:
+To get GestureCom up and running quickly using Docker Compose, follow these steps:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1.  **Clone the repository:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+    ```
+    git clone [Link to your GitHub repository]
+    cd [Your project directory name]
 
-## Deploy on Vercel
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+2.  **Build and run with Docker Compose:**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+    ```
+    docker compose up --build
+
+    ```
+
+    This command will build the necessary Docker images and start the services defined in your `docker-compose.yml` file.
+
+3.  **Access the application:**
+    Once the services are running, you can access GestureCom in your web browser at `http://localhost:[Your_Port_Number]`. (Replace `[Your_Port_Number]` with the port you've exposed in your `docker-compose.yml` file, typically 3000 for Next.js applications).
+
+## Default Model
+
+The default model can recognize 7 general signs:
+
+* yes
+
+* no
+
+* hello
+
+* peace
+
+* i love you
+
+* thank you
+
+* please
+
+Check it out by yourself here: \[Link to your deployed project/demo if available]
+
+## Use Cases
+
+* Facilitate communication with differently-abled people on the fly.
+
+* Used as a communication tool between children and elders.
+
+* Used in public places to facilitate communication between common people and differently-abled people.
+
+* Used by emergency services to understand the situation of a differently-abled person.
+
+* Many more...
+
+## Technologies Used
+
+* **TensorFlow (Python)**
+
+    * **Machine Learning:** Used `tensorflow-python` to learn and train the initial models.
+
+* **TensorFlow (JavaScript)**
+
+    * **Machine Learning:** Used `tensorflow-js` to facilitate the training and running of both pre-built and custom models right in your device.
+
+* **MediaPipe (Web)**
+
+    * **Landmark Detection:** Used MediaPipe to detect both pose and hand landmarks. This eliminates the requirement to store or process personally identifiable information by converting images to points in space.
+
+* **HTML**
+
+    * **Web:** Used to make the skeleton of the site.
+
+* **JavaScript**
+
+    * **Web:** JavaScript is used to run and handle user interaction on the web. This also facilitates the interface with WebGL.
+
+* **CSS**
+
+    * **Web:** CSS is used to style the site and make it look pretty.
+
+* **WebGL**
+
+    * **Web | Computing:** WebGL is used to run the models directly on the machine. This eliminates the slow VM of JS and can handle large datasets with ease.
+
+* **Git**
+
+    * **Version Control:** Git is used to manage different code versions and allowed for easy finding and rectifying of mistakes. It also acted as a backup to safeguard the source code.
+
+* **Python**
+
+    * **Computing:** Python is used to explore the initial idea and train the first few models.
+
+* **Next.js**
+
+    * **Web:** Next.js is used to streamline the development experience and facilitate faster iteration.
+
+* **GitHub**
+
+    * **Version Control | Publishing:** GitHub is used as remote code storage.
